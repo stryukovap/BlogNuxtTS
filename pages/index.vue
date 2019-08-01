@@ -1,72 +1,41 @@
 <template>
-  <div class="container">
-    <div>
-      <logo/>
-      <h1 class="title">
-        blognuxtts
-      </h1>
-      <h2 class="subtitle">
-        My geometric Nuxt.js project
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
-    </div>
-  </div>
+  <v-container grid-list-md>
+    <v-layout wrap>
+      <v-flex :class="`${layout.listLayout}`" v-for="(item,index) in list" :key="index">
+        <Card :height="item.height"
+              :weight="item.weight"
+              :base_experience="item.base_experience"
+              :id="item.id"
+              :name="item.name"
+              :front_default="item.sprites.front_default"
+              :back_default="item.sprites.back_default"/>
+      </v-flex>
+    </v-layout>
+    <pagination></pagination>
+  </v-container>
 </template>
 
-<script>
-    import Logo from '~/components/Logo.vue'
+<script lang="ts">
+    import {
+        Component,
+        Vue
+    } from "nuxt-property-decorator"
+    import {State} from "vuex-class"
+    import {Layout} from "../types";
+    import Pagination from "../components/Pagination.vue";
+    import Card from "../components/Card.vue";
 
-    export default {
+    @Component({
         components: {
-            Logo
+            Card, Pagination
+        },
+        async fetch({store, params}) {
+            await store.dispatch('getList', {root: true});
         }
+    })
+
+    export default class extends Vue {
+        @State list: any;
+        @State layout: Layout
     }
 </script>
-
-<style>
-  .container {
-    margin: 0 auto;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-  }
-
-  .title {
-    font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    display: block;
-    font-weight: 300;
-    font-size: 100px;
-    color: #35495e;
-    letter-spacing: 1px;
-  }
-
-  .subtitle {
-    font-weight: 300;
-    font-size: 42px;
-    color: #526488;
-    word-spacing: 5px;
-    padding-bottom: 15px;
-  }
-
-  .links {
-    padding-top: 15px;
-  }
-</style>
