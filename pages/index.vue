@@ -20,7 +20,7 @@
     import {Layout} from "~/types";
     import Card from "~/components/Card.vue";
     import Pagination from "~/components/Pagination.vue";
-    import {PropSync} from "vue-property-decorator";
+    import {State} from "vuex-class"
 
     @Component({
         components: {
@@ -32,8 +32,7 @@
     })
 
     export default class Page extends Vue {
-        @PropSync('list') list!: any;
-        @PropSync('layout') layout!: Layout;
-
+        @State list: any;
+        @State layout!: Layout
     }
 </script>
