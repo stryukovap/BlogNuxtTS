@@ -1,10 +1,10 @@
 <template>
-    <div class="text-xs-center">
-                   <v-pagination
-                     v-model="currentPage"
-                     :length="length"
-        ></v-pagination>
-    </div>
+  <div class="text-xs-center">
+    <v-pagination
+      v-model="currentPage"
+      :length="length"
+    ></v-pagination>
+  </div>
 </template>
 
 <script lang="ts">
@@ -25,7 +25,7 @@
                 get() {
                     return this.$store.state.currentPage
                 },
-                set(value) {
+                set(value: number) {
                     this.$store.dispatch('changeCurrentPage', value);
                 }
             }
