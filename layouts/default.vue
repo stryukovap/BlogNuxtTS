@@ -1,55 +1,74 @@
 <template>
-  <div>
+  <v-app>
+    <v-toolbar class="toolbar" color="green" :flat="true">
+      <v-toolbar-title>My Pokemons</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-select class="toolbar__select"
+                v-model="limit"
+                :items="limitList"
+      ></v-select>
+      <v-spacer></v-spacer>
+      <v-icon v-show="listLayout" @click="toggleLayout">fas fa-list</v-icon>
+      <v-icon v-show="!listLayout" @click="toggleLayout">fas fa-th-large</v-icon>
+      <v-spacer></v-spacer>
+      <v-icon @click="goBack">fas fa-arrow-left</v-icon>
+    </v-toolbar>
     <nuxt/>
-  </div>
+    <v-footer color="green">
+      <v-layout
+        align-center
+        justify-center
+      >
+        <div>KeepSolid Summer Internship &copy; {{ new Date().getFullYear() }}</div>
+      </v-layout>
+    </v-footer>
+  </v-app>
 </template>
-
 <style>
-  html {
-    font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, 'Helvetica Neue', Arial, sans-serif;
-    font-size: 16px;
-    word-spacing: 1px;
-    -ms-text-size-adjust: 100%;
-    -webkit-text-size-adjust: 100%;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-font-smoothing: antialiased;
-    box-sizing: border-box;
-  }
-
-  *,
-  *:before,
-  *:after {
-    box-sizing: border-box;
-    margin: 0;
-  }
-
-  .button--green {
-    display: inline-block;
-    border-radius: 4px;
-    border: 1px solid #3b8070;
-    color: #3b8070;
-    text-decoration: none;
-    padding: 10px 30px;
-  }
-
-  .button--green:hover {
-    color: #fff;
-    background-color: #3b8070;
-  }
-
-  .button--grey {
-    display: inline-block;
-    border-radius: 4px;
-    border: 1px solid #35495e;
-    color: #35495e;
-    text-decoration: none;
-    padding: 10px 30px;
-    margin-left: 15px;
-  }
-
-  .button--grey:hover {
-    color: #fff;
-    background-color: #35495e;
+  .toolbar__select {
+    width: 50px;
   }
 </style>
+<script lang="ts">
+    import {Component, Vue} from "nuxt-property-decorator"
+    import {State} from "vuex-class"
+
+    @Component({
+        async fetch({store, params}) {
+            await store.dispatch('getList', {root: true});
+        },
+        computed: {
+      limit: {
+        get() {
+          return this.$store.state.limit
+        },
+        set(value:number) {
+          this.$store.dispatch('changeLimit', value);
+        }
+      }
+    }
+    })
+
+    export default class extends Vue {
+      listLayout:boolean= true
+       toggleLayout() {
+        if (this.listLayout) {
+          this.$store.commit('layout', {
+            listLayout: 'xs12',
+            cardList: 'row'
+          });
+        } else {
+          this.$store.commit('layout', {
+            listLayout: 'xs6',
+            cardList: 'column'
+          });
+        }
+        this.listLayout = !this.listLayout;
+      }
+      goBack() {
+        this.$router.go(-1);
+      }
+      @State limitList!:number
+    }
+</script>
+
